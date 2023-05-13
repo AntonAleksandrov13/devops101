@@ -57,7 +57,7 @@ object BuildDocker : BuildType({
                     path = "app/Dockerfile"
                 }
                 contextDir = "app"
-                namesAndTags = "antonaleksandrovjetbrains/devops101app:latest"
+                namesAndTags = "antonaleksandrovjetbrains/devops101app:test-2"
             }
         }
         dockerCommand {
