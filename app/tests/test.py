@@ -21,3 +21,4 @@ def test_root(client):
 def test_failing_root(client):
     response = client.get("/")
     assert b"Hello World!" not in response.data
+
