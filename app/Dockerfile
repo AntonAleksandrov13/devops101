@@ -3,6 +3,7 @@ FROM python:3.8-alpine
 
 # copy the requirements file into the image
 COPY ./requirements.txt /app/requirements.txt
+RUN apk add curl
 
 # switch working directory
 WORKDIR /app
