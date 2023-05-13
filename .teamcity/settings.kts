@@ -63,7 +63,7 @@ object BuildDocker : BuildType({
         dockerCommand {
             name = "Push"
             commandType = push {
-                namesAndTags = "antonaleksandrovjetbrains/devops101app:latest"
+                namesAndTags = "antonaleksandrovjetbrains/devops101app:test-2"
             }
         }
     }
