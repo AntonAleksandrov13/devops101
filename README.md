@@ -104,3 +104,29 @@ back when code is ran.
 ![build-features](./docs/build-features.png)
 
 Now, when you open a pull request in GitHub, a build on TeamCity should be triggered.
+
+![new-pr](./docs/new-openned-pull-request.png)
+
+After a while TeamCity will finish the build and report status check back.
+
+![pr-example.png](./docs/pr-example.png)
+
+Now, let's make sure that we build the app after it was merged. Since the app already has a Dockerfile we will build and
+push Docker image to Docker Hub.
+
+![build-conf.png](./docs/add-docker-build-conf.png)
+
+Also, two build steps need to be added. One is for building the image and second one for push operation.
+
+![build-step.png](./docs/add-docker-build-step.png)
+
+![build-step.png](./docs/add-docker-push-build-step.png)
+
+In the end, Docker support needs to be enabled to establish password protected access for Docker push.
+
+![build-step.png](./docs/add-docker-support.png)
+
+Let's merge the pull request we have opened before. If we wait a minute, a new build will be triggered in Build configuration.
+
+![triggered-build.png](./docs/triggered-build.png)
+
