@@ -39,8 +39,27 @@ project {
     vcsRoot(HttpsGithubComAntonAleksandrov13devops101refsHeadsMain)
 
     buildType(Test)
+    buildType(Build1)
     buildType(BuildDocker)
 }
+
+object Build1 : BuildType({
+    name = "Build (1)"
+
+    vcs {
+        root(HttpsGithubComAntonAleksandrov13devops101refsHeadsMain)
+    }
+
+    triggers {
+        vcs {
+        }
+    }
+
+    features {
+        perfmon {
+        }
+    }
+})
 
 object BuildDocker : BuildType({
     name = "Build"
