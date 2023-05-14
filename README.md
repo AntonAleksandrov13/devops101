@@ -1,6 +1,6 @@
 # Devops101: culture vs job title
 
-This repository aims to illustrate step-by-step journey of DevOps transformation of a single app/product.
+This repository illustrates step-by-step journey of DevOps transformation of a single app/product.
 
 *This repository was created solely for illustratory purposes and does not imply usage of best practices in terms of
 technologies.*
@@ -126,7 +126,75 @@ In the end, Docker support needs to be enabled to establish password protected a
 
 ![build-step.png](./docs/add-docker-support.png)
 
-Let's merge the pull request we have opened before. If we wait a minute, a new build will be triggered in Build configuration.
+Let's merge the pull request we have opened before. If we wait a minute, a new build will be triggered in Build
+configuration.
 
 ![triggered-build.png](./docs/triggered-build.png)
+
+It's important to mention that TeamCity enables users to use Kotlin DSL. A detailed explanation what is it and how it
+works can be found [here](https://www.jetbrains.com/help/teamcity/kotlin-dsl.html).
+The basic idea is that instead of configuring every build using UI in TeamCity like we did before, we can use Kotlin
+code to create builds and other configurations inside Teamcity.
+
+Why is it important?
+
+Well, it's in ideology of DevOps that we aim to create code-centric system whereas much as possible is done by code.
+Usage of code gives us advantages of both git(think of version control and change history) and ability to restore
+configurations in the case of one of the components failing.
+
+Example of TeamCity Kotlin DSL can be found in `./.teamcity` folder.
+
+## Requirement 3,4 and 5
+
+These requirement cover deploy, operator and monitor phases of DevOps cycle.
+
+### Deploy
+
+How do we deploy and where do we deploy are two main questions to be asked here. If we are talking about cloud providers
+like AWS or GCP, we are looking at multiple services that can deploy Docker images.
+In this example, we will use [AWS ECS](https://aws.amazon.com/ecs/) to run our application.
+
+However, ECS still requires configurations in order to run a Docker container. One option is to click through AWS
+Console and create all necessary resources. Yet we see that this approach is cumbersome, prone to human error and simple
+boring. Not to mention that if AWS suddenly collapses for whatever reason we need to be able to recreate our setup from
+scratch.
+
+Infrastructure as a Code(IaC) to the rescue.
+
+*"Infrastructure as code (IaC) uses DevOps methodology and versioning with a descriptive model to define and deploy
+infrastructure, such as networks, virtual machines, load balancers, and connection topologies. Just as the same source
+code always generates the same binary, an IaC model generates the same environment every time it deploys."*
+
+(c) Microsoft documentation
+
+There is a number of options available on the market. There IaC solely built for cloud providers like [AWS CloudFormation](https://aws.amazon.com/cloudformation/)
+or [Azure Resource Manager](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview). There are tools built independently of cloud providers and can be considered cloud-agnostic
+like [Hashicorp Terraform](https://www.terraform.io/) and [Pulumi](https://www.pulumi.com/).
+
+How to choose the right one? 
+
+Well, each of them covers a specific case and imposes own limitations. However, undeniably Terraform is the most popular.
+
+Hence, we will use Terraform here.
+
+Since we are not aiming to cover all concepts of Terraform here, so it's suggested to check out [this article](https://itnext.io/terraform-for-beginners-dd8701c1ebdd) or [this article](https://developer.hashicorp.com/terraform/intro) before continuing.
+
+Terraform code for this project is stored in `./infrastructure` folder. Here's a brief overview of the files inside:
+
+1. `config.tf` - configures connection to AWS
+2. `variables.tf` - input configuration we might want to change
+3. `data.tf` - contains queries about resources in AWS
+4. `main.tf` - declaration of resources
+5. `outputs.tf` - values that we want to export
+
+Terraform can be run using `terraform plan` command which produces a long list of resources to be created. Basically, Terraform scans what is created in our AWS account already and compares our declarations([documentation](https://developer.hashicorp.com/terraform/tutorials/cli/plan)). If resources are not created like in our case, Terraform will show a list of resources to be created.
+
+We can apply these resources using `terraform apply` command.
+
+What is important for us is that using Terraform code we can fulfil operate and monitor stages. AWS already provides us with services like AWS CloudWatch and ECS monitoring. That means in Terraform we can not only create cloud infrastructure, but also solutions for each stage of DevOps cycle.
+
+Since Terraform is code we can deploy it using our CI/CD tool - TeamCity. In our case, let's implement the following:
+
+1. Once a feature is merged into main, we will build a Docker image.
+2. Once the image is built, it's deployed using Terraform.
 
