@@ -198,3 +198,30 @@ Since Terraform is code we can deploy it using our CI/CD tool - TeamCity. In our
 1. Once a feature is merged into main, we will build a Docker image.
 2. Once the image is built, it's deployed using Terraform.
 
+In the case of TeamCity, this is done using [Snapshot Dependencies](https://www.jetbrains.com/help/teamcity/snapshot-dependencies.html) and [Reverse dependency parameters](https://www.jetbrains.com/help/teamcity/snapshot-dependencies.html#:~:text=It%20must%20have%20no%20customized%20parameters%2C%20including%20those%20set%20via%20reverse.dep.%20parameters%20(related%20feature%20request%3A%20TW%2D23700).)
+
+For that a new configuration needs to be created:
+
+![create-deploy-conf.png](docs%2Fcreate-deploy-conf.png)
+
+We will run Terraform init and apply commands with an argument from Build configuration.
+![add-terraform-build-step.png](docs%2Fadd-terraform-build-step.png)
+
+In order for that to work, we will add a dependency on Build configuration
+![add-build-dependency.png](docs%2Fadd-build-dependency.png)
+
+Finally, we need to do small adjustment in Build image and Push build steps
+![change-docker-build-step.png](docs%2Fchange-docker-build-step.png)
+
+![change-docker-push-build-step.png](docs%2Fchange-docker-push-build-step.png)
+
+### Operate and monitor
+
+As for these phases, our Terraform configuration already contains operational tools and monitoring tools. 
+For example, CPU and Memory can be seen in ECS dashboard. 
+
+![ecs-monitoring.png](docs%2Fecs-monitoring.png)
+
+While logs are available in CloudWatch.
+
+![cw-logs.png](docs%2Fcw-logs.png)
