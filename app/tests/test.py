@@ -13,13 +13,10 @@ def client(app):
     return app.test_client()
 
 
+
 def test_root(client):
     response = client.get("/")
     assert b"Hello, World!" in response.data
-
-
-
-
 
 def test_failing_root(client):
     response = client.get("/")
