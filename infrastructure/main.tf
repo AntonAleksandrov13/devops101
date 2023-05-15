@@ -372,7 +372,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   {
     "name": "demo-app",
     "cpu": 10,
-    "image": "${var.ecs_image_url}",
+    "image": "${var.ecs_image_url}:${var.ecs_image_tag}",
     "essential": true,
     "memory": 300,
     "logConfiguration": {

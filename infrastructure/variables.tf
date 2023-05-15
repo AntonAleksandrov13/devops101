@@ -93,5 +93,11 @@ variable "service_name" {
 variable "ecs_image_url" {
   description = "The desired ECR image URL."
   type        = string
-  default = "antonaleksandrovjetbrains/devops101app:latest"
+  default = "antonaleksandrovjetbrains/devops101app"
+}
+
+variable "ecs_image_tag" {
+  description = "The desired ECR image URL."
+  type        = string
+  default = "latest"
 }
